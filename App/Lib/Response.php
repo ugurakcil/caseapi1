@@ -15,7 +15,7 @@ class Response
     public function toJSON($data = [])
     {
         http_response_code($this->status);
-        header('Content-Type: application/json');
+        header('Content-type: application/json; charset=utf-8');
         echo json_encode($data);
     }
 }

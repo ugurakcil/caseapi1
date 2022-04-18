@@ -1,35 +1,39 @@
 <?php
+/**
+ *
+ * @package      CaseApi1
+ * @since        1.0.0
+ * @link         https://github.com/ugurakcil/caseapi1
+ * @author       Uğur AKÇIL <ugurakcil@gmail.com>
+ * @copyright    Copyright (c) 2022, Uğur AKÇIL
+ * @license      https://github.com/ugurakcil/caseapi1/blob/master/LICENSE MIT License
+ *
+ */
+
+declare(strict_types=1);
+
+/*
+* Configurations
+* All requests are allowed in development mode
+* Don't forget to set the development mode to false when going live
+* */
+$developmentMode = true;
+
+/*
+* Header information, debugging, dependencies
+* */
+if($developmentMode) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    header('Access-Control-Allow-Origin: *');
+}
+
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Origin: *');
+
 require __DIR__ . '/vendor/autoload.php';
 
-use App\Lib\App;
-use App\Lib\Router;
-use App\Lib\Request;
-use App\Lib\Response;
-use App\Controller\Home;
-use App\Model\Posts;
+require 'router.php';
 
-Posts::load();
-
-Router::get('/', function () {
-    (new Home())->indexAction();
-});
-
-Router::get('/post', function (Request $req, Response $res) {
-    $res->toJSON(Posts::all());
-});
-
-Router::post('/post', function (Request $req, Response $res) {
-    $post = Posts::add($req->getJSON());
-    $res->status(201)->toJSON($post);
-});
-
-Router::get('/post/([0-9]*)', function (Request $req, Response $res) {
-    $post = Posts::findById($req->params[0]);
-    if ($post) {
-        $res->toJSON($post);
-    } else {
-        $res->status(404)->toJSON(['error' => "Not Found"]);
-    }
-});
-
-App::run();
+\App\Lib\App::run();
